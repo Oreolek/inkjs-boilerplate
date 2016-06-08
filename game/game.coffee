@@ -16,7 +16,7 @@ continueToNextChoice = (s) ->
     $("#content").append("<p>THE END</p>")
     $("#options").html("")
 
-fetch('../fogg.ink.json')
+fetch('fogg.ink.json')
   .then((response) ->
     return response.text()
   )
