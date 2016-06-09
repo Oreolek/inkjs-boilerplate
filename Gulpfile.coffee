@@ -27,9 +27,15 @@ audio = (target) ->
   return () ->
     return gulp.src(['audio/*.mp3']).pipe(gulp.dest(target))
 
+# Ink files
+ink = (target) ->
+  return () ->
+    return gulp.src(['game/*.json']).pipe(gulp.dest(target))
+
 gulp.task('html', html('./build'))
 gulp.task('img', img('./build/img'))
 gulp.task('audio', audio('./build/audio'))
+gulp.task('ink', ink('./build'))
 
 bundler = watchify(browserify({
   entries: ["./build/game/main.coffee"]
@@ -54,7 +60,7 @@ gulp.task('coffee', ['concatCoffee'], bundle)
 bundler.on('update', bundle)
 bundler.on('log', gutil.log)
 
-gulp.task('build', ['html', 'img', 'coffee', 'audio'])
+gulp.task('build', ['html', 'ink', 'img', 'coffee', 'audio'])
 
 gulp.task('serve', ['build'], () ->
   browserSync({
@@ -64,6 +70,7 @@ gulp.task('serve', ['build'], () ->
   })
 
   gulp.watch(['./html/*.html'], ['html'])
+  gulp.watch(['./game/*.json'], ['ink'])
   gulp.watch(['./img/*.png', './img/*.jpeg', './img/*.jpg'], ['img'])
   gulp.watch(['./game/*.coffee'], ['coffee']);
 
@@ -75,6 +82,7 @@ gulp.task('serve', ['build'], () ->
 gulp.task('html-dist', html('./dist'))
 gulp.task('img-dist', img('./dist/img'))
 gulp.task('audio-dist', audio('./dist/audio'))
+gulp.task('ink-dist', ink('./dist'))
 gulp.task('legal-dist', () ->
   return gulp.src(['LICENSE.txt'])
          .pipe(gulp.dest("./dist"))
@@ -97,6 +105,7 @@ gulp.task('coffee-dist', ['concatCoffee'], () ->
 
 gulp.task('dist', [
   'html-dist',
+  'ink-dist',
   'img-dist',
   'coffee-dist',
   'audio-dist',
